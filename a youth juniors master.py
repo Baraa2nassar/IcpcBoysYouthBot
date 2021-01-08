@@ -9,8 +9,12 @@ import mysql.connector
 from random import randint
 from config import *
 from discord.ext import commands
+
+RELEASE = str ("Jan - 4 - 2020")
+
 #------------------------------------------------------------------------------------------------------------------------------
 #if you are copying the code to repl.it start from here: 
+
 intents = discord.Intents.all()
 intents.members = True
 #bot = commands.Bot(command_prefix = '!', intents=intents)  # add the intents= part to your existing constructor call
@@ -23,7 +27,7 @@ SERVER_ID = 702367598238761010
 
 @client.event
 async def on_ready():
-    await client.change_presence(activity = discord.Game(name = "/This bot adds users)"))
+    await client.change_presence(activity = discord.Game(name = "/help for commands)"))
     print("We have logged in as {0.user}".format(client))
     refresh = []
     
@@ -52,9 +56,15 @@ async def on_message(message):
             await message.channel.send("https://gyazo.com/45ad780b2d98f884f00273e3dc0db6cc")
             await message.delete(delay=1)
 
-    if "/baraa" in message.content.lower(): # baraa
+    if "/baraa" in message.content.lower(): # baraa id 
         if message.author.id == 670325339263860758:
           await message.channel.send("very well inshAllah")
+
+    if message.content.lower().startswith('/version'):
+        if message.author.id == 670325339263860758:
+            await message.channel.send("this is the " ,
+                                       f"`{RELEASE} `" , "release")
+    
     if message.content.startswith('/help'): # Help command
         with open("cmds.md") as f:
             cmds = f.read()
@@ -68,19 +78,22 @@ async def on_message(message):
                 print ("guild is", guild)
                 print("type guild is",type(guild))
                 print ("groupID", (int (user_id.group())))
-                
-
                 member = guild.get_member(int(user_id.group()))
+            
                 if member is None:
                     return None
+            
                 print (guild.members[1])
                 print ("member is", member) #
                 print (member.roles)
                 role = discord.utils.get(client.get_guild(SERVER_ID).roles, name= "Youth")
                 await member.add_roles(role)
                 channel = client.get_channel(702367598238761013)
-
+        
                 await channel.send("<@!" + user_id.group() + "> *has* ***officially*** *joined the IcpcBoysYouth! Welcome your Brother!")
+
+        else:
+             await message.channel.send("you are not allowed to use this feature because you are not Admin")
 
 #end here:    
 #--------------------------------------------------------------------------------------------------------------------------------------------------
