@@ -41,23 +41,59 @@ MessageTime =  datetime.date(2021,1,18)
 import datetime
 import asyncio
 import pytz
+#usertime = input("enter time") leave this till the end for now we want to get the bot running
+#check if the same month then same day then same hour then same minute for minute you just
 
-g=datetime.time(19,) #the time in 24 hrs
+ #the time in 24 hrs | (year, month, day, hrs, min, sec, microsecond)
 
-now=datetime.datetime.now()
 
-the_time = now.time().hour
+#the_time = now.time().hour
+#print (now.month)
 
-#print (the_time)
-async def timeloop():
-	while True:
+#just try make it send a message "jumaa mubarakah, don't for get to read surat alkahf" for now
+
+def everyFriday(): #switches to this week's Friday
+	now=datetime.datetime.now()
+	week= datetime.timedelta(days = 7)
+	thisWeeksFriday=datetime.datetime(2021,1,1,6,0)#two weeks ago
+	while (thisWeeksFriday < now):
 		try:
-			if (g.hour==the_time):
-				print ("the time is: " , datetime.datetime.now())
+			thisWeeksFriday += week 
+			#print (thisWeeksFriday, "1")
+			if (thisWeeksFriday >= now):
+				return thisWeeksFriday
+		except:
+			print ("everyFriday broke")
+			pass
+
+	
+#print (everyFriday().day)
+		#multiple = True
+		
+async def timeloop():
+	i = 0
+	
+	remindMeAT =datetime.datetime(2021,1,19,19,22)
+	#make an if statement for remindMeAt
+	#i can make an if statement if now is smaller than remind me at then increase the date by ** so we get reminders and I only do it once
+	#or you can make if it is a multiple of 7 by taking the remainder using this notation //
+	tdelta = datetime.timedelta(minutes = 2) #the loop every () the message will be sent after the remindmeAt heppens
+	while True:
+		now=datetime.datetime.now() #has to be in the loop to renew the time
+		try:
+			if (remindMeAT.day==now.day and remindMeAT.hour==now.hour and remindMeAT.minute==now.minute):#same day and?
+				print("it is the same day")
+				remindMeAT = (remindMeAT+tdelta) # it should send a message every two minutes
+				await asyncio.sleep (31)
 			
-			await asyncio.sleep(60) #in between paranthases is seconds
+			if (everyFriday().day==now.day and everyFriday().hour==now.hour and everyFriday().minute==now.minute):
+				print("jumaa mubarakah :) \ndon't foget to:\n 1:read surat alkahf\n 2:make dua")
+			
+			else:
+				await asyncio.sleep(1) #I have a propblem here, I want it to go back to the main function when it does not find the time
 		except:
 			print ("broke")
+			break
 
 
 loop = asyncio.get_event_loop()
@@ -65,6 +101,7 @@ loop = asyncio.get_event_loop()
 
 try : #loop that runs it forever
 	asyncio.ensure_future(timeloop())
+	#asyncio.ensure_future(everyFriday())
 	loop.run_forever()
 except KeyboardInterrupt:
 	pass
